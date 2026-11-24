@@ -10,7 +10,7 @@ Availability (working name) is a public, read-only page that shows when a person
 
 ## Current state
 
-The repository holds `SPEC.md` and the agent files described below. There is no application code and no `package.json`; milestone M0 creates both.
+Milestone M0 (foundation) is in place: the Worker skeleton with a `/health` route, the D1 schema of `SPEC.md` §9 as the first migration, CI, and the availability function `free()` with its test table. Nothing a publisher or viewer can use exists yet; that starts with M1.
 
 ## Pipeline
 
@@ -64,7 +64,24 @@ Only the user starts it, by typing `/ship`. When verify passes, report that the 
 
 ## Commands
 
-None exist yet. The M0 change adds the build, lint, test and single-test commands to this section when it creates the scaffold. `SPEC.md` §8 fixes the tools they will use: Wrangler (including `wrangler d1 migrations` for the database), and Vitest with `@cloudflare/vitest-pool-workers`.
+Node 22 (`.nvmrc`) and npm. Run `npm ci` first.
+
+| Command | Does |
+| --- | --- |
+| `npm run dev` | Runs the Worker locally with Wrangler on `http://localhost:8787`, with a local D1 database |
+| `npm run migrate:local` | Applies `migrations/` to that local database. Run it before `npm run dev` on a fresh checkout and after adding a migration |
+| `npm test` | Runs all tests once, inside `workerd`, against a real D1 database with the migrations applied |
+| `npx vitest run test/availability/free.test.ts` | Runs one test file |
+| `npx vitest run -t "weekday 0 is Sunday"` | Runs the tests whose name matches |
+| `npx vitest` | Watch mode |
+| `npm run lint` | Biome: lint and format check |
+| `npm run format` | Biome: fix formatting and safe lint fixes |
+| `npm run typecheck` | Regenerates `worker-configuration.d.ts` from `wrangler.jsonc`, then type-checks `src/` and `test/` |
+| `npm run build` | Bundles the Worker without deploying (`wrangler deploy --dry-run`) |
+
+CI (`.github/workflows/ci.yml`) runs lint, typecheck, test and build on every pull request.
+
+Nothing deploys yet. `wrangler.jsonc` holds a placeholder `database_id` until the first deploy in M4.
 
 ## Architecture
 
