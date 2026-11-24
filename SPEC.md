@@ -348,7 +348,7 @@ This function has no I/O, so it is covered by table-driven unit tests, including
 | Caching | The Worker stores each public response (`/@name`, `.json`, `.ics`) in the Cache API for 60 seconds, one entry per URL | No purge step; edits appear within 60 seconds. Rules in §5 "Caching" |
 | Rate limiting | Workers Rate Limiting binding, limits from policies | |
 | Validation | `zod` schemas shared by API, forms and policy values | |
-| Tests | Vitest with `@cloudflare/vitest-pool-workers` | Real D1 in tests |
+| Tests | Vitest with `@cloudflare/vitest-plugin` | Real D1 in tests |
 | Protocols | HTTP/3 and HTTP/2 enabled at the Cloudflare zone; TLS 1.3; HSTS preload | No app code needed: browsers that only speak HTTP/2 get HTTP/2, the rest upgrade to HTTP/3 via `Alt-Svc` |
 
 ## 9. Data model (D1)
@@ -360,7 +360,8 @@ users              (id, username UNIQUE, display_name, note, avatar_url, time_zo
                     state /* active|suspended */, email NULL,
                     recovery_hash, recovery_salt,
                     recovery_failed_count, recovery_locked_until NULL,
-                    signup_ip_hash, created_at, updated_at, last_renamed_at)
+                    signup_ip_hash NULL /* cleared after 30 days */,
+                    created_at, updated_at, last_renamed_at)
 contact_links      (id, user_id, kind, url, position)
 passkeys           (id /* credential id */, user_id, public_key, counter,
                     transports, created_at, last_used_at)
@@ -380,8 +381,9 @@ operators          (id, user_id NULL, access_email, created_at)
 role_grants        (operator_id, role, granted_by, granted_at)
 policies           (key, scope /* global|user */, user_id NULL, value_json,
                     version, updated_by, updated_at)
-audit_log          (id, actor_kind, actor_id, action, target_kind, target_id,
-                    before_json, after_json, ip_hash, created_at)
+audit_log          (id, actor_kind, actor_id, action, target_kind, target_id /* text */,
+                    before_json NULL, after_json NULL, ip_hash NULL /* cleared after 30 days */,
+                    created_at)
 ```
 
 `exceptions.label` is visible only to the publisher, never in public output. Times entered by the publisher as one-off dates are converted to UTC on save; weekly rules stay in local wall time so they follow daylight-saving changes.

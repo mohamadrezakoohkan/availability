@@ -16,7 +16,7 @@ The commands (build, lint, typecheck, test) are in `CLAUDE.md`, "Commands".
 
 ## Stack
 
-The stack is fixed in `SPEC.md` §8: Cloudflare Workers, Hono with Hono JSX, D1, `zod`, `@simplewebauthn/server`, Vitest with `@cloudflare/vitest-pool-workers`. Do not add a dependency that does the job of one listed there.
+The stack is fixed in `SPEC.md` §8: Cloudflare Workers, Hono with Hono JSX, D1, `zod`, `@simplewebauthn/server`, Vitest with `@cloudflare/vitest-plugin`. Do not add a dependency that does the job of one listed there.
 
 ## Adding a convention
 
