@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "availability",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "availability",
+      // Placeholder. Local dev and tests do not use it; the first deploy (M4)
+      // replaces it with the id from `wrangler d1 create availability`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
