@@ -66,6 +66,23 @@ describe("schema", () => {
     await expect(insertUser("Alice")).rejects.toThrow(/CHECK constraint failed/);
   });
 
+  it("refuses a slot or block that ends before it starts", async () => {
+    const userId = await insertUser("alice");
+
+    await expect(
+      env.DB.prepare("INSERT INTO manual_slots (user_id, start_utc, end_utc) VALUES (?, 2, 1)")
+        .bind(userId)
+        .run(),
+    ).rejects.toThrow(/CHECK constraint failed/);
+    await expect(
+      env.DB.prepare(
+        "INSERT INTO exceptions (user_id, kind, source, start_utc, end_utc) VALUES (?, 'block', 'manual', 2, 2)",
+      )
+        .bind(userId)
+        .run(),
+    ).rejects.toThrow(/CHECK constraint failed/);
+  });
+
   it("refuses a weekday outside 0–6", async () => {
     const userId = await insertUser("alice");
     const insert = env.DB.prepare(

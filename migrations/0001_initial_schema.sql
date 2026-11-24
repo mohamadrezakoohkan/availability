@@ -81,7 +81,8 @@ CREATE TABLE manual_slots (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id   INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   start_utc INTEGER NOT NULL,
-  end_utc   INTEGER NOT NULL
+  end_utc   INTEGER NOT NULL,
+  CHECK (end_utc > start_utc)
 );
 
 CREATE INDEX manual_slots_user ON manual_slots (user_id);
@@ -93,7 +94,8 @@ CREATE TABLE exceptions (
   source    TEXT NOT NULL CHECK (source IN ('manual', 'quick')),
   start_utc INTEGER NOT NULL,
   end_utc   INTEGER NOT NULL,
-  label     TEXT                                            -- publisher's own views only, never public
+  label     TEXT,                                           -- publisher's own views only, never public
+  CHECK (end_utc > start_utc)
 );
 
 CREATE INDEX exceptions_user ON exceptions (user_id);
