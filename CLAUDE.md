@@ -10,7 +10,7 @@ Availability (working name) is a public, read-only page that shows when a person
 
 ## Current state
 
-Milestone M0 (foundation) is in place: the Worker skeleton with a `/health` route, the D1 schema of `SPEC.md` §9 as the first migration, CI, and the availability function `free()` with its test table. Nothing a publisher or viewer can use exists yet; that starts with M1.
+Milestone M0 (foundation) is in place: the Worker skeleton with a `/health` route, the D1 schema of `SPEC.md` §9 as the first migration, CI, and the availability function `free()` with its test table. M1 (Publisher) has started: `policy()` with the typed policy definitions (`src/policy/`) and the username rules and availability check (`src/username/`, `GET /api/v1/usernames/:username`). Sign-up, passkeys, recovery, the editor and the rest of M1 are not built yet.
 
 ## Pipeline
 
