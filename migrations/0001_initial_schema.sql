@@ -23,7 +23,7 @@ CREATE TABLE users (
   recovery_salt           TEXT NOT NULL,
   recovery_failed_count   INTEGER NOT NULL,
   recovery_locked_until   INTEGER,
-  signup_ip_hash          TEXT NOT NULL,
+  signup_ip_hash          TEXT,                             -- cleared after 30 days (§10)
   created_at              INTEGER NOT NULL,
   updated_at              INTEGER NOT NULL,
   last_renamed_at         INTEGER NOT NULL
@@ -158,9 +158,9 @@ CREATE TABLE audit_log (
   actor_id    INTEGER NOT NULL,
   action      TEXT NOT NULL,
   target_kind TEXT NOT NULL,
-  target_id   INTEGER NOT NULL,
-  before_json TEXT NOT NULL,
-  after_json  TEXT NOT NULL,
-  ip_hash     TEXT NOT NULL,
+  target_id   TEXT NOT NULL,                                -- user id as text, or a key such as a policy key or reserved name
+  before_json TEXT,                                         -- NULL when the target did not exist before
+  after_json  TEXT,                                         -- NULL when the target no longer exists
+  ip_hash     TEXT,                                         -- cleared after 30 days (§10)
   created_at  INTEGER NOT NULL
 );

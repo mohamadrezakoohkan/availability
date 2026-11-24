@@ -23,5 +23,5 @@
 
 ## Dependencies
 
-- `wrangler` is pinned to the exact version that `@cloudflare/vitest-pool-workers` depends on, so `wrangler dev` and the tests run the same `workerd`. Upgrade the two together.
+- `wrangler` is pinned to the exact version that `@cloudflare/vitest-plugin` depends on, so `wrangler dev` and the tests run the same `workerd`. Upgrade the two together.
 - `compatibility_date` in `wrangler.jsonc` must not be later than the release date of that `workerd`.

@@ -83,6 +83,19 @@ describe("schema", () => {
     ).rejects.toThrow(/CHECK constraint failed/);
   });
 
+  it("lets an audit entry name a text target and have no before value", async () => {
+    await env.DB.prepare(
+      `INSERT INTO audit_log (actor_kind, actor_id, action, target_kind, target_id, before_json, after_json, ip_hash, created_at)
+       VALUES ('operator', 1, 'reserved_name.add', 'reserved_username', 'admin', NULL, '{}', NULL, ?)`,
+    )
+      .bind(NOW)
+      .run();
+    const row = await env.DB.prepare("SELECT target_id, before_json FROM audit_log").first();
+
+    expect(row).toEqual({ target_id: "admin", before_json: null });
+    await env.DB.exec("DELETE FROM audit_log");
+  });
+
   it("refuses a weekday outside 0–6", async () => {
     const userId = await insertUser("alice");
     const insert = env.DB.prepare(

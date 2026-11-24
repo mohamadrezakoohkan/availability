@@ -52,5 +52,5 @@ Rules from `SPEC.md` that span features. A change to one feature can break them 
 
 ## Tests
 
-- Tests run in Vitest with `@cloudflare/vitest-pool-workers` against a real D1 database. Do not mock D1 (§8).
+- Tests run in Vitest with `@cloudflare/vitest-plugin` against a real D1 database. Do not mock D1 (§8).
 - The availability function is covered by table-driven tests that include DST transitions in several zones, rules that cross midnight and overlapping blocks (§7).

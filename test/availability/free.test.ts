@@ -591,6 +591,36 @@ table("daylight saving in other zones", [
   },
 ]);
 
+describe("invalid input", () => {
+  const base: Publisher = {
+    timeZone: "Europe/Madrid",
+    horizonWeeks: 4,
+    precisionMinutes: 30,
+    weeklyRules: [],
+    manualSlots: [],
+    exceptions: [],
+  };
+  const [from, to] = [at("2027-01-11T00:00Z"), at("2027-01-18T00:00Z")];
+
+  it.each([0, -15, 1.5, Number.NaN])("rejects precisionMinutes %s", (precisionMinutes) => {
+    expect(() => free({ ...base, precisionMinutes }, from, to, from)).toThrow(RangeError);
+  });
+
+  it.each(["9:00", "25:00", "09:60", "ab:cd", ""])("rejects the time of day %j", (bad) => {
+    const publisher = { ...base, weeklyRules: [rule(MON, bad, "12:00")] };
+
+    expect(() => free(publisher, from, to, from)).toThrow(RangeError);
+  });
+
+  it("accepts 24:00 as the end of the day", () => {
+    const publisher = { ...base, weeklyRules: [rule(MON, "22:00", "24:00")] };
+
+    expect(free(publisher, from, to, from).map(show)).toEqual([
+      "2027-01-11T21:00Z/2027-01-11T23:00Z",
+    ]);
+  });
+});
+
 describe("purity", () => {
   it("does not change its arguments and gives the same answer twice", () => {
     const publisher: Publisher = Object.freeze({

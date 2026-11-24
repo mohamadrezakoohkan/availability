@@ -58,6 +58,19 @@ export interface Window {
  * Sorted, not overlapping, never in the past and never beyond the horizon.
  */
 export function free(publisher: Publisher, from: Instant, to: Instant, now: Instant): Window[] {
+  // Bad rows would turn the arithmetic below into NaN and silently give an
+  // empty list, which looks the same as "no availability". Fail loudly.
+  if (!Number.isInteger(publisher.precisionMinutes) || publisher.precisionMinutes <= 0) {
+    throw new RangeError(`Invalid precisionMinutes: ${publisher.precisionMinutes}`);
+  }
+  for (const rule of publisher.weeklyRules) {
+    for (const local of [rule.startLocal, rule.endLocal]) {
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(local) && local !== "24:00") {
+        throw new RangeError(`Invalid time of day: ${local}`);
+      }
+    }
+  }
+
   const rangeStart = Math.max(from, now);
   const rangeEnd = Math.min(to, now + publisher.horizonWeeks * 7 * DAY);
   if (rangeStart >= rangeEnd) return [];

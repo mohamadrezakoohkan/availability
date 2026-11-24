@@ -5,7 +5,7 @@ The rules that tests must keep (real D1, table-driven tests for the availability
 ## Where tests live and run
 
 - Tests are in `test/`, mirroring `src/`, in files named `*.test.ts`.
-- Every test runs inside `workerd` through `@cloudflare/vitest-pool-workers` (`vitest.config.ts`), including tests of pure functions. Time-zone data in particular must come from the runtime the Worker ships on, not from Node.
+- Every test runs inside `workerd` through `@cloudflare/vitest-plugin` (`vitest.config.ts`), including tests of pure functions. Time-zone data in particular must come from the runtime the Worker ships on, not from Node.
 - `test/apply-migrations.ts` runs before each test file and applies everything in `migrations/` to the test database. A test never creates tables itself.
 - Bindings come from `import { env } from "cloudflare:workers"`. A binding that exists only in tests is declared in `test/env.d.ts`.
 
