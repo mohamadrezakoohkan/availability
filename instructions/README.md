@@ -11,6 +11,8 @@ Code conventions for this repository. The `code` skill (`.claude/skills/code/SKI
 | [time.md](time.md) | How instants, local times, weekdays and zones are represented; the one module that applies zone rules; passing `now` | The change handles a time, a date or a time zone |
 | [database.md](database.md) | Migration files, column types and nullability, keys and foreign keys | The change adds a migration or writes SQL |
 | [testing.md](testing.md) | Where tests live, how they get a migrated D1 database, the table-driven pattern | The change adds or changes a test |
+| [policies.md](policies.md) | Defining and reading platform limits through `policy()` | The change adds, reads or tests a limit |
+| [routes.md](routes.md) | Sub-apps per feature, API paths, caching headers, clock and logic placement | The change adds or edits a route |
 
 The commands (build, lint, typecheck, test) are in `CLAUDE.md`, "Commands".
 
